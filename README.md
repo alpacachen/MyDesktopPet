@@ -4,7 +4,7 @@
 
 A cute macOS desktop pet app with smooth Lottie animations to make your desktop more fun!
 
-<img src="Assets/Icons/AppIcon.icns" width="128" alt="App Icon"/>
+<img src="Assets/Icons/AppIcon.png" width="128" alt="App Icon"/>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/macOS-13.0+-blue.svg)](https://www.apple.com/macos/)
