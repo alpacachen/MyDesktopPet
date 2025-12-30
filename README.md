@@ -25,9 +25,15 @@ A cute macOS desktop pet app with smooth Lottie animations to make your desktop 
 - 📍 **All Desktop Spaces** - Visible across all virtual desktops
 - 🎯 **Menu Bar Control** - Paw print icon with full menu control
 
-## 📸 Screenshots
+## 📸 Demo
 
-*Screenshots coming soon*
+<div align="center">
+
+![Demo](Assets/Screenshots/demo.gif)
+
+*Cute corgi running on your desktop!*
+
+</div>
 
 ## 🚀 Quick Start
 
