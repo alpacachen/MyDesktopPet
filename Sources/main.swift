@@ -1,7 +1,7 @@
 import Cocoa
 import Lottie
 
-// 内置动画配置
+// Built-in animation configuration
 struct BuiltInAnimation {
     let name: String
     let filename: String
@@ -9,29 +9,29 @@ struct BuiltInAnimation {
 }
 
 let builtInAnimations: [BuiltInAnimation] = [
-    BuiltInAnimation(name: "cute_doggie", filename: "cute_doggie.json", displayName: "可爱小狗"),
-    BuiltInAnimation(name: "norm_dog", filename: "norm_dog.json", displayName: "卡通狗狗")
+    BuiltInAnimation(name: "cute_doggie", filename: "cute_doggie.json", displayName: "Cute Doggie"),
+    BuiltInAnimation(name: "norm_dog", filename: "norm_dog.json", displayName: "Norm Dog")
 ]
 
-// 自定义动画管理器
+// Custom animation manager
 class CustomAnimationManager {
     static let shared = CustomAnimationManager()
 
     let customAnimationsDirectory: URL
 
     private init() {
-        // 获取应用支持目录
+        // Get application support directory
         let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
         let appDirectory = appSupport.appendingPathComponent("MyDesktopPet")
         customAnimationsDirectory = appDirectory.appendingPathComponent("CustomAnimations")
 
-        // 创建目录
+        // Create directory
         try? FileManager.default.createDirectory(at: customAnimationsDirectory, withIntermediateDirectories: true)
 
-        print("📁 自定义动画目录: \(customAnimationsDirectory.path)")
+        print("📁 Custom animations directory: \(customAnimationsDirectory.path)")
     }
 
-    // 获取所有自定义动画
+    // Get all custom animations
     func getCustomAnimations() -> [(name: String, path: String)] {
         guard let files = try? FileManager.default.contentsOfDirectory(at: customAnimationsDirectory, includingPropertiesForKeys: nil) else {
             return []
@@ -46,12 +46,12 @@ class CustomAnimationManager {
             .sorted { $0.name < $1.name }
     }
 
-    // 导入动画（复制文件）
+    // Import animation (copy file)
     func importAnimation(from sourceURL: URL) -> Bool {
         let filename = sourceURL.lastPathComponent
         let destinationURL = customAnimationsDirectory.appendingPathComponent(filename)
 
-        // 如果文件已存在，添加编号
+        // If file exists, add number suffix
         var finalURL = destinationURL
         var counter = 1
         while FileManager.default.fileExists(atPath: finalURL.path) {
@@ -64,28 +64,28 @@ class CustomAnimationManager {
 
         do {
             try FileManager.default.copyItem(at: sourceURL, to: finalURL)
-            print("✅ 已导入动画: \(finalURL.lastPathComponent)")
+            print("✅ Animation imported: \(finalURL.lastPathComponent)")
             return true
         } catch {
-            print("❌ 导入失败: \(error)")
+            print("❌ Import failed: \(error)")
             return false
         }
     }
 
-    // 删除动画
+    // Delete animation
     func deleteAnimation(path: String) -> Bool {
         do {
             try FileManager.default.removeItem(atPath: path)
-            print("✅ 已删除动画: \(path)")
+            print("✅ Animation deleted: \(path)")
             return true
         } catch {
-            print("❌ 删除失败: \(error)")
+            print("❌ Delete failed: \(error)")
             return false
         }
     }
 }
 
-// Lottie 动画视图
+// Lottie animation view
 class LottiePetView: NSView {
     var animationView: LottieAnimationView!
     var isDragging = false
@@ -98,7 +98,7 @@ class LottiePetView: NSView {
         self.wantsLayer = true
         self.layer?.backgroundColor = NSColor.clear.cgColor
 
-        // 创建 Lottie 动画视图
+        // Create Lottie animation view
         animationView = LottieAnimationView()
         animationView.frame = self.bounds
         animationView.contentMode = .scaleAspectFit
@@ -106,7 +106,7 @@ class LottiePetView: NSView {
         animationView.backgroundBehavior = .pauseAndRestore
         self.addSubview(animationView)
 
-        // 加载第一个可用动画
+        // Load first available animation
         loadFirstAvailableAnimation()
     }
 
@@ -115,11 +115,11 @@ class LottiePetView: NSView {
     }
 
     func loadFirstAvailableAnimation() {
-        // 优先加载内置动画
+        // Load built-in animation first
         if let firstAnimation = builtInAnimations.first {
             loadBuiltInAnimation(firstAnimation.name)
         } else {
-            // 如果没有内置，尝试加载自定义
+            // If no built-in, try loading custom animation
             let customAnimations = CustomAnimationManager.shared.getCustomAnimations()
             if let firstCustom = customAnimations.first {
                 loadAnimation(from: firstCustom.path, name: firstCustom.name)
@@ -129,7 +129,7 @@ class LottiePetView: NSView {
 
     func loadBuiltInAnimation(_ name: String) {
         if let animation = builtInAnimations.first(where: { $0.name == name }) {
-            // 从 Bundle 资源路径加载
+            // Load from Bundle resource path
             if let resourcePath = Bundle.main.resourcePath {
                 let animationPath = (resourcePath as NSString).appendingPathComponent("Animations/\(animation.filename)")
                 if FileManager.default.fileExists(atPath: animationPath) {
@@ -138,7 +138,7 @@ class LottiePetView: NSView {
                 }
             }
 
-            // 备用路径（开发时使用）
+            // Fallback paths (for development)
             let possiblePaths = [
                 "Sources/Resources/Animations/\(animation.filename)",
                 "Resources/Animations/\(animation.filename)",
@@ -152,7 +152,7 @@ class LottiePetView: NSView {
                 }
             }
 
-            print("❌ 找不到动画文件: \(animation.filename)")
+            print("❌ Animation file not found: \(animation.filename)")
         }
     }
 
@@ -168,9 +168,9 @@ class LottiePetView: NSView {
         if let animation = LottieAnimation.filepath(path) {
             animationView.animation = animation
             animationView.play()
-            print("✅ 已加载动画: \(name)")
+            print("✅ Animation loaded: \(name)")
         } else {
-            print("❌ 无法加载动画: \(path)")
+            print("❌ Cannot load animation: \(path)")
         }
     }
 
@@ -179,7 +179,7 @@ class LottiePetView: NSView {
         animationView.frame = self.bounds
     }
 
-    // 鼠标拖拽
+    // Mouse dragging
     override func mouseDown(with event: NSEvent) {
         isDragging = true
         let locationInWindow = event.locationInWindow
@@ -201,11 +201,11 @@ class LottiePetView: NSView {
         isDragging = false
     }
 
-    // 右键菜单
+    // Right-click menu
     override func rightMouseDown(with event: NSEvent) {
         let menu = NSMenu()
 
-        // 预设动画
+        // Built-in animations
         let builtInMenu = NSMenu()
         for animation in builtInAnimations {
             let item = NSMenuItem(
@@ -219,11 +219,11 @@ class LottiePetView: NSView {
             }
             builtInMenu.addItem(item)
         }
-        let builtInMenuItem = NSMenuItem(title: "预设动画", action: nil, keyEquivalent: "")
+        let builtInMenuItem = NSMenuItem(title: "Built-in Animations", action: nil, keyEquivalent: "")
         builtInMenuItem.submenu = builtInMenu
         menu.addItem(builtInMenuItem)
 
-        // 自定义素材
+        // Custom animations
         let customAnimations = CustomAnimationManager.shared.getCustomAnimations()
         if !customAnimations.isEmpty {
             let customMenu = NSMenu()
@@ -241,19 +241,19 @@ class LottiePetView: NSView {
             }
 
             customMenu.addItem(NSMenuItem.separator())
-            customMenu.addItem(NSMenuItem(title: "管理自定义素材...", action: #selector(manageCustomAnimations), keyEquivalent: ""))
+            customMenu.addItem(NSMenuItem(title: "Manage Custom Animations...", action: #selector(manageCustomAnimations), keyEquivalent: ""))
 
-            let customMenuItem = NSMenuItem(title: "自定义素材", action: nil, keyEquivalent: "")
+            let customMenuItem = NSMenuItem(title: "Custom Animations", action: nil, keyEquivalent: "")
             customMenuItem.submenu = customMenu
             menu.addItem(customMenuItem)
         }
 
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "导入自定义素材...", action: #selector(importCustomAnimation), keyEquivalent: "i"))
+        menu.addItem(NSMenuItem(title: "Import Animation...", action: #selector(importCustomAnimation), keyEquivalent: "i"))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "访问 LottieFiles.com", action: #selector(openLottieFiles), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Visit LottieFiles.com", action: #selector(openLottieFiles), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "退出", action: #selector(quitApp), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
 
         NSMenu.popUpContextMenu(menu, with: event, for: self)
     }
@@ -272,8 +272,8 @@ class LottiePetView: NSView {
 
     @objc func importCustomAnimation() {
         let openPanel = NSOpenPanel()
-        openPanel.title = "导入自定义 Lottie 动画"
-        openPanel.message = "选择的文件会被复制到应用目录，下次启动仍然可用"
+        openPanel.title = "Import Custom Lottie Animation"
+        openPanel.message = "The selected file will be copied to app directory and persist across launches"
         openPanel.canChooseFiles = true
         openPanel.canChooseDirectories = false
         openPanel.allowsMultipleSelection = false
@@ -281,20 +281,20 @@ class LottiePetView: NSView {
 
         if openPanel.runModal() == .OK, let url = openPanel.url {
             if CustomAnimationManager.shared.importAnimation(from: url) {
-                // 导入成功，立即加载
+                // Import successful, load immediately
                 let customAnimations = CustomAnimationManager.shared.getCustomAnimations()
                 if let imported = customAnimations.first(where: { $0.path.contains(url.deletingPathExtension().lastPathComponent) }) {
                     loadCustomAnimation(imported.path)
                 }
 
-                // 通知 AppDelegate 更新菜单
+                // Notify AppDelegate to update menu
                 NotificationCenter.default.post(name: NSNotification.Name("UpdateMenu"), object: nil)
             }
         }
     }
 
     @objc func manageCustomAnimations() {
-        // 打开自定义动画文件夹
+        // Open custom animations folder
         NSWorkspace.shared.open(CustomAnimationManager.shared.customAnimationsDirectory)
     }
 
@@ -309,7 +309,7 @@ class LottiePetView: NSView {
     }
 }
 
-// 应用委托
+// Application delegate
 class AppDelegate: NSObject, NSApplicationDelegate {
     var window: NSWindow!
     var petView: LottiePetView!
@@ -318,9 +318,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     let baseSize: CGFloat = 300
 
     func applicationDidFinishLaunching(_ notification: Notification) {
-        print("✅ 桌面宠物启动（Lottie 版本）")
+        print("✅ Desktop Pet launched (Lottie version)")
 
-        // 监听更新菜单通知
+        // Listen for menu update notifications
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateStatusBarMenu),
@@ -328,7 +328,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil
         )
 
-        // 创建透明无边框窗口
+        // Create transparent borderless window
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: baseSize, height: baseSize),
             styleMask: [.borderless],
@@ -342,7 +342,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.collectionBehavior = [.canJoinAllSpaces, .stationary]
         window.hasShadow = false
 
-        // 添加 Lottie 视图
+        // Add Lottie view
         petView = LottiePetView(frame: window.contentView!.bounds)
         petView.autoresizingMask = [.width, .height]
         window.contentView = petView
@@ -350,13 +350,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.center()
         window.makeKeyAndOrderFront(nil)
 
-        // 创建菜单栏图标
+        // Create menu bar icon
         setupStatusBarMenu()
 
         NSApp.setActivationPolicy(.accessory)
 
-        print("💡 右键点击可切换动画")
-        print("💡 菜单栏可以控制和切换")
+        print("💡 Right-click to switch animations")
+        print("💡 Use menu bar to control and switch")
     }
 
     func setScale(_ scale: CGFloat) {
@@ -380,7 +380,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func setupStatusBarMenu() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "pawprint.fill", accessibilityDescription: "桌面宠物")
+            button.image = NSImage(systemSymbolName: "pawprint.fill", accessibilityDescription: "Desktop Pet")
         }
 
         updateStatusBarMenu()
@@ -389,7 +389,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func updateStatusBarMenu() {
         let menu = NSMenu()
 
-        // 预设动画
+        // Built-in animations
         for animation in builtInAnimations {
             let item = NSMenuItem(
                 title: animation.displayName,
@@ -403,12 +403,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(item)
         }
 
-        // 自定义素材
+        // Custom animations
         let customAnimations = CustomAnimationManager.shared.getCustomAnimations()
         if !customAnimations.isEmpty {
             menu.addItem(NSMenuItem.separator())
 
-            let customHeader = NSMenuItem(title: "自定义素材", action: nil, keyEquivalent: "")
+            let customHeader = NSMenuItem(title: "Custom Animations", action: nil, keyEquivalent: "")
             customHeader.isEnabled = false
             menu.addItem(customHeader)
 
@@ -428,12 +428,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.addItem(NSMenuItem.separator())
 
-        // 缩放子菜单
+        // Scale submenu
         let scaleMenu = NSMenu()
         let scales: [(String, CGFloat)] = [
             ("50%", 0.5),
             ("75%", 0.75),
-            ("100%（默认）", 1.0),
+            ("100% (Default)", 1.0),
             ("150%", 1.5),
             ("200%", 2.0)
         ]
@@ -451,18 +451,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             scaleMenu.addItem(item)
         }
 
-        let scaleMenuItem = NSMenuItem(title: "缩放大小", action: nil, keyEquivalent: "")
+        let scaleMenuItem = NSMenuItem(title: "Scale", action: nil, keyEquivalent: "")
         scaleMenuItem.submenu = scaleMenu
         menu.addItem(scaleMenuItem)
 
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "导入自定义素材...", action: #selector(importCustomAnimation), keyEquivalent: "i"))
-        menu.addItem(NSMenuItem(title: "管理自定义素材...", action: #selector(manageCustomAnimations), keyEquivalent: ""))
-        menu.addItem(NSMenuItem(title: "显示/隐藏", action: #selector(toggleWindow), keyEquivalent: "h"))
+        menu.addItem(NSMenuItem(title: "Import Animation...", action: #selector(importCustomAnimation), keyEquivalent: "i"))
+        menu.addItem(NSMenuItem(title: "Manage Custom Animations...", action: #selector(manageCustomAnimations), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Show/Hide", action: #selector(toggleWindow), keyEquivalent: "h"))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "访问 LottieFiles", action: #selector(openLottieFiles), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "Visit LottieFiles", action: #selector(openLottieFiles), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "退出", action: #selector(quitApp), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit", action: #selector(quitApp), keyEquivalent: "q"))
 
         statusItem?.menu = menu
     }
@@ -514,7 +514,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 
-// 启动应用
+// Launch application
 let app = NSApplication.shared
 let delegate = AppDelegate()
 app.delegate = delegate

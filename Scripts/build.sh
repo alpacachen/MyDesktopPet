@@ -61,7 +61,7 @@ cat > MyDesktopPet.app/Contents/Info.plist << 'EOF'
 <plist version="1.0">
 <dict>
     <key>CFBundleDevelopmentRegion</key>
-    <string>zh_CN</string>
+    <string>en</string>
     <key>CFBundleExecutable</key>
     <string>MyDesktopPet</string>
     <key>CFBundleIdentifier</key>
@@ -69,9 +69,9 @@ cat > MyDesktopPet.app/Contents/Info.plist << 'EOF'
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>我的桌面宠物</string>
+    <string>MyDesktopPet</string>
     <key>CFBundleDisplayName</key>
-    <string>我的桌面宠物</string>
+    <string>MyDesktopPet</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -94,7 +94,7 @@ EOF
 
 # 9. 创建 DMG
 echo -e "${BLUE}💿 创建 DMG 安装包...${NC}"
-hdiutil create -volname "我的桌面宠物" -srcfolder MyDesktopPet.app -ov -format UDZO MyDesktopPet.dmg > /dev/null 2>&1
+hdiutil create -volname "MyDesktopPet" -srcfolder MyDesktopPet.app -ov -format UDZO MyDesktopPet.dmg > /dev/null 2>&1
 
 # 10. 完成
 echo ""
