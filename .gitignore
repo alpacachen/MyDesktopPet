@@ -1,0 +1,47 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.pins
+Package.resolved
+xcuserdata/
+DerivedData/
+
+# Xcode
+*.xcodeproj
+*.xcworkspace
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xccheckout
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Build artifacts
+MyDesktopPet
+generate_icon
+*.o
+*.swiftmodule
+*.swiftdoc
+
+# Distribution
+*.dmg
+MyDesktopPet.app/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Icon generation artifacts
+AppIcon_*.png
+AppIcon.iconset/
